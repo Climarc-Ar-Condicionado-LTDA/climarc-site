@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Climarc Ar Condicionado — Soluções em Climatização</title>
-<meta name="description" content="Climarc Ar Condicionado Ltda — especialistas em soluções para climatização há mais de 5 anos. Instalação, manutenção e projetos para indústrias, saúde pública, educação e forças armadas em todo o estado de São Paulo.">
+<meta name="description" content="Climarc Ar Condicionado Ltda — especialistas em soluções para climatização há mais de 10 anos. Instalação, manutenção e projetos para indústrias, saúde pública, educação e forças armadas em todo o estado de São Paulo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -270,6 +270,147 @@
   .contact-card .wa:hover{ background:var(--accent); }
   @media (max-width:800px){ .contact-grid{grid-template-columns:1fr;} }
 
+  /* ---------- LEAD FORM ---------- */
+  .lead-form-wrap{ max-width:640px; margin:44px auto 0; }
+  .lead-form-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:28px;
+    padding:40px;
+    text-align:left;
+    box-shadow:0 30px 60px rgba(11,22,32,0.06);
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px 20px;
+  }
+  .form-field-full{ grid-column:1 / -1; }
+  .form-field{ display:flex; flex-direction:column; gap:8px; }
+  .form-field label{
+    font-size:13.5px; font-weight:700; color:var(--ink);
+  }
+  .form-field label .req{ color:var(--accent); margin-left:2px; }
+  .form-field input, .form-field textarea{
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    padding:13px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--bg);
+    color:var(--ink);
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    width:100%;
+  }
+  .form-field textarea{ resize:vertical; min-height:96px; font-family:'Inter', sans-serif; }
+  .form-field input::placeholder, .form-field textarea::placeholder{ color:#9AA5AD; }
+  .form-field input:focus, .form-field textarea:focus{
+    border-color:var(--accent);
+    background:var(--surface);
+    box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  .form-field.has-error input, .form-field.has-error textarea{
+    border-color:#E0483E;
+    box-shadow:0 0 0 4px rgba(224,72,62,0.1);
+  }
+  .field-error{
+    display:none;
+    font-size:12.5px;
+    color:#E0483E;
+    font-weight:600;
+  }
+  .form-field.has-error .field-error{ display:block; }
+
+  .form-submit{
+    margin-top:30px;
+    width:100%;
+    background:linear-gradient(100deg, var(--accent) 0%, #1464C0 100%);
+    color:#fff;
+    border:none;
+    padding:16px 24px;
+    border-radius:100px;
+    font-family:'Manrope', sans-serif;
+    font-weight:700;
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+    box-shadow:0 14px 30px rgba(0,152,212,0.28);
+  }
+  .form-submit:hover{ transform:translateY(-2px); box-shadow:0 18px 36px rgba(0,152,212,0.36); }
+  .form-submit:active{ transform:translateY(0); }
+  .form-submit.is-loading{ opacity:0.75; pointer-events:none; }
+  .form-submit svg{ transition:transform .2s ease; }
+  .form-submit:hover svg{ transform:translateX(3px); }
+
+  .form-meta{
+    margin-top:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .form-note{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12.5px; color:var(--ink-soft); font-weight:600;
+  }
+  .form-note-link{ text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+  .form-note-link:hover{ color:var(--accent); }
+
+  .form-success{
+    display:none;
+    text-align:center;
+    padding:16px;
+    margin-top:22px;
+    border-radius:14px;
+    background:var(--accent-soft);
+    color:var(--ink);
+    font-size:14px;
+    font-weight:600;
+  }
+  .form-success.show{ display:block; }
+
+  .hp-field{
+    position:absolute !important;
+    width:1px; height:1px;
+    opacity:0; pointer-events:none;
+    left:-9999px;
+  }
+
+  .form-error-box{
+    display:none;
+    text-align:center;
+    padding:16px;
+    margin-top:22px;
+    border-radius:14px;
+    background:rgba(224,72,62,0.08);
+    color:#B8342B;
+    font-size:14px;
+    font-weight:600;
+  }
+  .form-error-box a{ text-decoration:underline; }
+  .form-error-box.show{ display:block; }
+
+  .contact-divider{
+    display:flex; align-items:center; gap:16px;
+    max-width:640px; margin:48px auto 0;
+    color:var(--ink-soft); font-size:12.5px; font-weight:600;
+    text-transform:uppercase; letter-spacing:0.06em;
+  }
+  .contact-divider::before, .contact-divider::after{
+    content:''; flex:1; height:1px; background:var(--line);
+  }
+
+  @media (max-width:640px){
+    .form-grid{ grid-template-columns:1fr; }
+    .lead-form-card{ padding:28px 22px; }
+  }
+
   .cta-section{ text-align:center; }
   .cta-section h2{ font-size:clamp(30px, 4.6vw, 50px); max-width:720px; margin:0 auto; }
   .cta-section p{ margin-top:18px; color:var(--ink-soft); font-size:17px; }
@@ -313,7 +454,7 @@
     <path d="M-100 120 C 220 60, 480 160, 760 100 S 1260 60, 1560 120" fill="none" stroke="#0B6FB0" stroke-width="1.5" opacity="0.14"/>
   </svg>
   <div class="hero-inner">
-    <span class="eyebrow">Mais de 5 anos climatizando o estado de São Paulo</span>
+    <span class="eyebrow">Mais de 10 anos climatizando o estado de São Paulo</span>
     <h1>Climatização de precisão para <span>operações que não podem parar.</span></h1>
     <p>A Climarc projeta, instala e mantém sistemas de ar condicionado para indústrias, saúde pública, educação e forças armadas — com mais de 2.000 clientes ativos e 25.000 equipamentos atendidos.</p>
     <div class="hero-actions">
@@ -333,12 +474,11 @@
     <div class="about-text reveal">
       <span class="eyebrow" style="margin-bottom:16px;">Quem somos</span>
       <h2>Especialistas em soluções para climatização.</h2>
-      <p>Há mais de 5 anos, a Climarc Ar Condicionado Ltda atende empresas, indústrias e órgãos públicos em todo o estado de São Paulo, com atendimento em expansão para outros estados.</p>
+      <p>Há mais de 10 anos, a Climarc Ar Condicionado Ltda atende empresas, indústrias e órgãos públicos em todo o estado de São Paulo, com atendimento em expansão para outros estados.</p>
       <p>Nosso trabalho vai da instalação ao contrato de manutenção recorrente, garantindo que a operação do cliente — seja uma linha de produção, um hospital ou uma unidade militar — nunca pare por falha no clima.</p>
       <div class="team-row">
-        <div class="team-pill"><div class="num">06</div><div class="label">Técnicos de campo</div></div>
-        <div class="team-pill"><div class="num">06</div><div class="label">Auxiliares técnicos</div></div>
-        <div class="team-pill"><div class="num">02</div><div class="label">Supervisores</div></div>
+        <div class="team-pill"><div class="num">+10</div><div class="label">Anos no mercado</div></div>
+        <div class="team-pill"><div class="num">+15</div><div class="label">Equipe técnica em campo</div></div>
       </div>
     </div>
     <div class="about-card reveal">
@@ -431,8 +571,8 @@
   <div class="wrap stats-grid">
     <div class="reveal"><div class="stat-num">+2.000</div><div class="stat-label">Clientes ativos</div></div>
     <div class="reveal"><div class="stat-num">+25.000</div><div class="stat-label">Equipamentos atendidos</div></div>
-    <div class="reveal"><div class="stat-num">+5</div><div class="stat-label">Anos de mercado</div></div>
-    <div class="reveal"><div class="stat-num">14</div><div class="stat-label">Profissionais em campo</div></div>
+    <div class="reveal"><div class="stat-num">+10</div><div class="stat-label">Anos no mercado</div></div>
+    <div class="reveal"><div class="stat-num">+15</div><div class="stat-label">Equipe técnica em campo</div></div>
   </div>
 </div>
 
@@ -675,7 +815,58 @@
   <div class="wrap">
     <span class="kicker">Fale com a gente</span>
     <h2>Vamos cuidar do clima da sua operação?</h2>
-    <p>Fale diretamente com o setor responsável — sem intermediários, sem demora.</p>
+    <p>Preencha os dados abaixo ou fale direto com o setor responsável — sem intermediários, sem demora.</p>
+
+    <div class="lead-form-wrap reveal">
+      <form class="lead-form-card" id="leadForm" novalidate>
+        <input type="text" name="_honeypot" class="hp-field" tabindex="-1" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="f-nome">Nome<span class="req">*</span></label>
+            <input type="text" id="f-nome" name="nome" placeholder="Seu nome" autocomplete="name">
+            <span class="field-error">Digite seu nome.</span>
+          </div>
+          <div class="form-field">
+            <label for="f-empresa">Empresa</label>
+            <input type="text" id="f-empresa" name="empresa" placeholder="Nome da empresa" autocomplete="organization">
+          </div>
+          <div class="form-field">
+            <label for="f-email">E-mail<span class="req">*</span></label>
+            <input type="email" id="f-email" name="email" placeholder="seu@email.com" autocomplete="email">
+            <span class="field-error">Digite um e-mail válido.</span>
+          </div>
+          <div class="form-field">
+            <label for="f-telefone">Telefone<span class="req">*</span></label>
+            <input type="tel" id="f-telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="numeric">
+            <span class="field-error">Digite um telefone válido com DDD.</span>
+          </div>
+          <div class="form-field form-field-full">
+            <label for="f-projeto">Conte sobre o seu projeto</label>
+            <textarea id="f-projeto" name="projeto" rows="4" placeholder="Ex.: rede de 3 lojas, ~25 máquinas, busco contrato de manutenção..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="form-submit" id="formSubmitBtn">
+          <span class="btn-label">Solicitar contato</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+
+        <div class="form-meta">
+          <span class="form-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Enviado direto por e-mail</span>
+          <a href="https://wa.me/5519996382323" target="_blank" rel="noopener" class="form-note form-note-link">ou prefere pelo WhatsApp?</a>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          Recebemos sua solicitação! Nosso time comercial vai te responder em breve.
+        </div>
+        <div class="form-error-box" id="formErrorBox">
+          Não conseguimos enviar agora. Tente novamente ou fale direto pelo
+          <a href="https://wa.me/5519996382323" target="_blank" rel="noopener">WhatsApp</a>.
+        </div>
+      </form>
+    </div>
+
+    <div class="contact-divider reveal"><span>ou ligue direto para o setor</span></div>
 
     <div class="contact-grid">
       <div class="contact-card reveal">
@@ -727,6 +918,106 @@
     });
   }, { threshold: 0.15 });
   revealEls.forEach(el=>io.observe(el));
+
+  /* ---------- LEAD FORM ---------- */
+  (function(){
+    const form = document.getElementById('leadForm');
+    if(!form) return;
+    const btn = document.getElementById('formSubmitBtn');
+    const btnLabel = btn.querySelector('.btn-label');
+    const successBox = document.getElementById('formSuccess');
+    const errorBox = document.getElementById('formErrorBox');
+    const phoneInput = document.getElementById('f-telefone');
+
+    const required = {
+      nome: { el: document.getElementById('f-nome'), test: v => v.trim().length >= 2 },
+      email: { el: document.getElementById('f-email'), test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+      telefone: { el: document.getElementById('f-telefone'), test: v => v.replace(/\D/g,'').length >= 10 }
+    };
+
+    // máscara de telefone (11) 99999-9999
+    phoneInput.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g,'').slice(0,11);
+      if (v.length > 6) {
+        v = v.replace(/^(\d{2})(\d{4,5})(\d{0,4}).*/, '($1) $2-$3');
+      } else if (v.length > 2) {
+        v = v.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+      } else if (v.length > 0) {
+        v = '(' + v;
+      }
+      e.target.value = v;
+    });
+
+    Object.keys(required).forEach(key => {
+      required[key].el.addEventListener('input', () => {
+        required[key].el.closest('.form-field').classList.remove('has-error');
+      });
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      errorBox.classList.remove('show');
+
+      let valid = true;
+      let firstInvalid = null;
+      Object.keys(required).forEach(key => {
+        const field = required[key];
+        const ok = field.test(field.el.value);
+        field.el.closest('.form-field').classList.toggle('has-error', !ok);
+        if(!ok){ valid = false; if(!firstInvalid) firstInvalid = field.el; }
+      });
+
+      if(!valid){
+        if(firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      // honeypot anti-spam: se preenchido, é bot — ignora silenciosamente
+      const honeypot = form.querySelector('[name="_honeypot"]');
+      if(honeypot && honeypot.value !== ''){
+        form.reset();
+        successBox.classList.add('show');
+        form.querySelector('.form-grid').style.display = 'none';
+        btn.style.display = 'none';
+        return;
+      }
+
+      btn.classList.add('is-loading');
+      btnLabel.textContent = 'Enviando...';
+
+      const payload = {
+        Nome: document.getElementById('f-nome').value.trim(),
+        Empresa: document.getElementById('f-empresa').value.trim() || 'Não informado',
+        'E-mail': document.getElementById('f-email').value.trim(),
+        Telefone: document.getElementById('f-telefone').value.trim(),
+        Projeto: document.getElementById('f-projeto').value.trim() || 'Não informado',
+        _subject: 'Novo contato pelo site — Climarc',
+        _template: 'table',
+        _captcha: 'false'
+      };
+
+      fetch('https://formsubmit.co/ajax/contratos@climarc.com.br', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => {
+        if(!res.ok) throw new Error('Falha no envio');
+        return res.json();
+      })
+      .then(() => {
+        form.querySelector('.form-grid').style.display = 'none';
+        btn.style.display = 'none';
+        form.querySelector('.form-meta').style.display = 'none';
+        successBox.classList.add('show');
+      })
+      .catch(() => {
+        btn.classList.remove('is-loading');
+        btnLabel.textContent = 'Solicitar contato';
+        errorBox.classList.add('show');
+      });
+    });
+  })();
 </script>
 
 </body>
