@@ -83,12 +83,6 @@
     mask-image:radial-gradient(ellipse 70% 60% at 50% 40%, black 0%, transparent 78%);
   }
 
-  #snowCanvas{
-    position:fixed;
-    inset:0;
-    z-index:40;
-    pointer-events:none;
-  }
   .eyebrow{
     font-size:13px; font-weight:600; color:var(--accent);
     background:var(--accent-soft); padding:6px 14px; border-radius:100px;
@@ -480,15 +474,21 @@
 
   @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } }
 
-  /* ---------- SNOW CANVAS ---------- */
-  #snowCanvas{
+  /* ---------- ANIMAÇÕES DE FUNDO (CANVAS) ---------- */
+  #nodesCanvas, #airflowCanvas, #snowCanvas{
     position:fixed;
     inset:0;
     width:100vw;
     height:100vh;
-    z-index:9999;
     pointer-events:none;
   }
+  /* Rede de nós e fluxo de ar ficam no mesmo plano da foto de fundo:
+     atrás de todo o conteúdo, visíveis apenas nas áreas sem card/fundo
+     sólido (hero e vãos entre seções) para não sobrepor texto. */
+  #nodesCanvas{ z-index:-1; }
+  #airflowCanvas{ z-index:-1; }
+  /* A neve continua por cima de tudo, bem discreta. */
+  #snowCanvas{ z-index:9999; }
 
   /* ---------- PAGE BACKGROUND PHOTO (chillers / terraço) ---------- */
   /* Camada fixa e discreta atrás de todo o conteúdo. Troque a URL do
@@ -561,6 +561,8 @@
 <body>
 
 <div class="page-bg-photo" aria-hidden="true"></div>
+<canvas id="nodesCanvas" aria-hidden="true"></canvas>
+<canvas id="airflowCanvas" aria-hidden="true"></canvas>
 <canvas id="snowCanvas" aria-hidden="true"></canvas>
 
 <nav>
@@ -1102,26 +1104,122 @@
   }, { threshold: 0.15 });
   revealEls.forEach(el=>io.observe(el));
 
-  /* ---------- SNOW / COLD PARTICLES ---------- */
+  /* ---------- ANIMAÇÕES DE FUNDO: REDE DE NÓS, FLUXO DE AR E NEVE ---------- */
   (function(){
-    const canvas = document.getElementById('snowCanvas');
-    if(!canvas) return;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(reduceMotion) return;
 
-    const ctx = canvas.getContext('2d');
-    let w, h, flakes;
-    const COUNT = window.innerWidth < 700 ? 22 : 40;
+    const isMobile = window.innerWidth < 700;
 
-    function resize(){
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+    /* ---- Rede de Nós ---- */
+    const nodesCanvas = document.getElementById('nodesCanvas');
+    const nodesCtx = nodesCanvas ? nodesCanvas.getContext('2d') : null;
+    const nodes = [];
+    const NODE_COUNT = isMobile ? 12 : 25;
+    const CONNECTION_DISTANCE = 150;
+
+    function makeNode(){
+      return {
+        x: Math.random() * nodesCanvas.width,
+        y: Math.random() * nodesCanvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        r: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.3 + 0.2
+      };
     }
+
+    function updateNode(n){
+      n.x += n.vx;
+      n.y += n.vy;
+      if(n.x > nodesCanvas.width) n.x = 0;
+      if(n.x < 0) n.x = nodesCanvas.width;
+      if(n.y > nodesCanvas.height) n.y = 0;
+      if(n.y < 0) n.y = nodesCanvas.height;
+    }
+
+    function drawNode(n){
+      nodesCtx.fillStyle = `rgba(0, 152, 212, ${n.opacity})`;
+      nodesCtx.beginPath();
+      nodesCtx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      nodesCtx.fill();
+    }
+
+    function drawConnections(){
+      for(let i = 0; i < nodes.length; i++){
+        for(let j = i + 1; j < nodes.length; j++){
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if(dist < CONNECTION_DISTANCE){
+            const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.2;
+            nodesCtx.strokeStyle = `rgba(35, 180, 201, ${opacity})`;
+            nodesCtx.lineWidth = 0.5;
+            nodesCtx.beginPath();
+            nodesCtx.moveTo(nodes[i].x, nodes[i].y);
+            nodesCtx.lineTo(nodes[j].x, nodes[j].y);
+            nodesCtx.stroke();
+          }
+        }
+      }
+    }
+
+    function tickNodes(){
+      nodesCtx.clearRect(0, 0, nodesCanvas.width, nodesCanvas.height);
+      nodes.forEach(updateNode);
+      drawConnections();
+      nodes.forEach(drawNode);
+      requestAnimationFrame(tickNodes);
+    }
+
+    /* ---- Fluxo de Ar ---- */
+    const airflowCanvas = document.getElementById('airflowCanvas');
+    const airflowCtx = airflowCanvas ? airflowCanvas.getContext('2d') : null;
+    const airflows = [];
+    const AIRFLOW_COUNT = isMobile ? 3 : 4;
+    let airflowTime = 0;
+
+    function makeAirflow(index){
+      return {
+        yOffset: (airflowCanvas.height / AIRFLOW_COUNT) * index + Math.random() * 50,
+        amplitude: Math.random() * 30 + 20,
+        frequency: Math.random() * 0.005 + 0.003,
+        speed: Math.random() * 1 + 0.5,
+        opacity: Math.random() * 0.15 + 0.05
+      };
+    }
+
+    function drawAirflow(flow, time){
+      airflowCtx.strokeStyle = `rgba(0, 152, 212, ${flow.opacity})`;
+      airflowCtx.lineWidth = 2;
+      airflowCtx.lineCap = 'round';
+      airflowCtx.lineJoin = 'round';
+      airflowCtx.beginPath();
+      for(let x = 0; x < airflowCanvas.width; x += 5){
+        const y = flow.yOffset + Math.sin((x * flow.frequency) + (time * flow.speed)) * flow.amplitude;
+        if(x === 0) airflowCtx.moveTo(x, y);
+        else airflowCtx.lineTo(x, y);
+      }
+      airflowCtx.stroke();
+    }
+
+    function tickAirflow(){
+      airflowCtx.clearRect(0, 0, airflowCanvas.width, airflowCanvas.height);
+      airflowTime += 0.02;
+      airflows.forEach(f => drawAirflow(f, airflowTime));
+      requestAnimationFrame(tickAirflow);
+    }
+
+    /* ---- Neve ---- */
+    const snowCanvas = document.getElementById('snowCanvas');
+    const snowCtx = snowCanvas ? snowCanvas.getContext('2d') : null;
+    let flakes = [];
+    const SNOW_COUNT = isMobile ? 22 : 40;
 
     function makeFlake(){
       return {
-        x: Math.random() * w,
-        y: Math.random() * h,
+        x: Math.random() * snowCanvas.width,
+        y: Math.random() * snowCanvas.height,
         r: Math.random() * 2.2 + 0.6,
         speedY: Math.random() * 0.35 + 0.12,
         speedX: Math.random() * 0.3 - 0.15,
@@ -1131,33 +1229,53 @@
       };
     }
 
-    function init(){
-      resize();
-      flakes = Array.from({length: COUNT}, makeFlake);
-    }
-
-    function tick(){
-      ctx.clearRect(0, 0, w, h);
+    function tickSnow(){
+      snowCtx.clearRect(0, 0, snowCanvas.width, snowCanvas.height);
       flakes.forEach(f => {
         f.drift += f.driftSpeed;
         f.x += f.speedX + Math.sin(f.drift) * 0.25;
         f.y += f.speedY;
-        if(f.y > h + 10){ f.y = -10; f.x = Math.random() * w; }
-        if(f.x > w + 10) f.x = -10;
-        if(f.x < -10) f.x = w + 10;
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
-        ctx.fill();
+        if(f.y > snowCanvas.height + 10){ f.y = -10; f.x = Math.random() * snowCanvas.width; }
+        if(f.x > snowCanvas.width + 10) f.x = -10;
+        if(f.x < -10) f.x = snowCanvas.width + 10;
+        snowCtx.beginPath();
+        snowCtx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        snowCtx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+        snowCtx.fill();
       });
-      requestAnimationFrame(tick);
+      requestAnimationFrame(tickSnow);
+    }
+
+    /* ---- Inicialização e responsividade compartilhada ---- */
+    function resizeCanvases(){
+      const w = window.innerWidth, h = window.innerHeight;
+      [nodesCanvas, airflowCanvas, snowCanvas].forEach(c => {
+        if(!c) return;
+        c.width = w;
+        c.height = h;
+      });
+    }
+
+    function init(){
+      resizeCanvases();
+      if(nodesCtx){
+        for(let i = 0; i < NODE_COUNT; i++) nodes.push(makeNode());
+        requestAnimationFrame(tickNodes);
+      }
+      if(airflowCtx){
+        for(let i = 0; i < AIRFLOW_COUNT; i++) airflows.push(makeAirflow(i));
+        requestAnimationFrame(tickAirflow);
+      }
+      if(snowCtx){
+        flakes = Array.from({length: SNOW_COUNT}, makeFlake);
+        requestAnimationFrame(tickSnow);
+      }
     }
 
     init();
-    requestAnimationFrame(tick);
     window.addEventListener('resize', () => {
-      clearTimeout(window._snowResizeT);
-      window._snowResizeT = setTimeout(resize, 200);
+      clearTimeout(window._bgAnimResizeT);
+      window._bgAnimResizeT = setTimeout(resizeCanvases, 200);
     });
   })();
 
